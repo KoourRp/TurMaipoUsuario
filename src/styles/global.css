@@ -1,7 +1,6 @@
-@import "tailwindcss";
-@import "tailwindcss/base";
+@import "tailwindcss/preflight";
 @import "tailwindcss/utilities";
 
 .leaflet-container {
-    z-index: 0;
+  z-index: 0;
 }

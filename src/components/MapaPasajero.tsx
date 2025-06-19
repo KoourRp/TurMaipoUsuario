@@ -15,65 +15,45 @@ const MapaPasajero = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [mapCenter, setMapCenter] = useState<[number, number]>([-33.590175, -70.567891]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-
-
-  const userIcon = new L.Icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
-
-const busIcon = new L.Icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/61/61231.png',
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
-
-  useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        const { data, error } = await supabase.from('bus_stops').select('id').limit(1);
-        if (error) throw error;
-        console.log('✅ Supabase conectado. Primer ID:', data?.[0]?.id);
-      } catch (err) {
-        console.error('❌ Error al conectar con Supabase:', err);
-        setErrorMsg('No se pudo conectar a Supabase.');
-      }
-    };
-    checkConnection();
-  }, []);
   
-
+  const userIcon = new L.Icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+  
+  const busIcon = new L.Icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/61/61238.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+  
   useEffect(() => {
     const fetchBusStops = async () => {
       const { data } = await supabase.from('bus_stops').select('*');
-      console.log('📍 Paraderos cargados:', data);
       if (data) setBusStops(data);
     };
     fetchBusStops();
   }, []);
-
+  
   useEffect(() => {
     if (!selectedStop) return;
-
+    
     const fetchBusData = async () => {
       setLoading(true);
       setErrorMsg(null);
-      console.log('🟡 Paradero seleccionado: 🟡', selectedStop);
 
       try {
-        const { data: ra, error: errorRa } = await supabase
+        const { data: ra } = await supabase
           .from('route_assignment')
           .select('bus_id')
           .eq('route_id', selectedStop.route_id)
           .order('created_at', { ascending: false })
           .limit(1);
 
-        console.log('📘 Resultado route_assignment:', ra);
-
-        if (!ra || ra.length === 0 || errorRa) {
+        if (!ra || ra.length === 0) {
           setErrorMsg('No hay micro asignada a esta ruta.');
           setLoading(false);
           return;
@@ -81,7 +61,7 @@ const busIcon = new L.Icon({
 
         const busId = ra[0].bus_id;
 
-        const { data: busData, error: errorBus } = await supabase
+        const { data: busData } = await supabase
           .from('bus_location')
           .select('*')
           .eq('bus_id', busId)
@@ -89,9 +69,7 @@ const busIcon = new L.Icon({
           .limit(1)
           .single();
 
-        console.log('🚌 Última ubicación encontrada:', busData);
-
-        if (!busData || errorBus) {
+        if (!busData) {
           setErrorMsg('No hay ubicación registrada para esta micro.');
           setLoading(false);
           return;
@@ -106,7 +84,6 @@ const busIcon = new L.Icon({
         setEta(Math.round(dist / 82));
       } catch (err) {
         setErrorMsg('Error al obtener datos del bus.');
-        console.error('❌ Error general al buscar micro:', err);
       }
 
       setLoading(false);
@@ -114,56 +91,47 @@ const busIcon = new L.Icon({
 
     const interval = setInterval(fetchBusData, 10000);
     fetchBusData();
-
     return () => clearInterval(interval);
   }, [selectedStop]);
 
   useEffect(() => {
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const { latitude, longitude } = pos.coords;
-      setMapCenter([latitude, longitude]);  // para centrar el mapa
-      setUserLocation([latitude, longitude]);  // para el marcador
-      console.log('📍 Centrado en usuario:', latitude, longitude);
-    },
-    (err) => {
-      console.warn('❌ Error obteniendo ubicación del usuario:', err);
-    }
-  );
-}, []);
-
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setMapCenter([latitude, longitude]);
+        setUserLocation([latitude, longitude]);
+      },
+      (err) => {
+        console.warn('❌ No se pudo obtener ubicación:', err);
+      }
+    );
+  }, []);
 
   return (
-    <div className="w-full h-screen bg-[#181818] text-[#ebdbb2] relative">
-      <header className="bg-[#003366] text-white py-4 px-6 flex items-center justify-between shadow-md">
-        <h1 className="text-xl md:text-2xl font-semibold text-[#99ccff]">🚌 TurMaipo</h1>
-        <p className="text-sm md:text-base text-[#cddfff]">Seguimiento de buses en tiempo real</p>
-      </header>
-
+    <div style={{ height: '100vh', width: '100vw' }}>
       {errorMsg && (
-        <div className="absolute top-20 left-4 bg-red-600 text-white px-4 py-2 rounded shadow-md z-[1000] text-sm md:text-base">
+        <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-md text-sm z-[1000]">
           ⚠️ {errorMsg}
         </div>
       )}
       {loading && (
-        <div className="absolute top-20 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow-md z-[1000] text-sm md:text-base">
-          🔄 Buscando ubicación del bus...
+        <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-md text-sm z-[1000]">
+          🔄 Buscando ubicación...
         </div>
       )}
+
       <MapContainer
         center={mapCenter}
         zoom={13}
-        style={{ height: '100vh', width: '100%' }}
+        style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           subdomains={['a', 'b', 'c', 'd']}
         />
 
-        {busStops.map((stop) => {
-          const features = stop.stops_json?.features || [];
-
-          return features.map((feature: any, index: number) => {
+        {busStops.map((stop) =>
+          (stop.stops_json?.features || []).map((feature: any, index: number) => {
             const [lng, lat] = feature.geometry.coordinates;
             return (
               <Marker
@@ -171,11 +139,7 @@ const busIcon = new L.Icon({
                 position={[lat, lng]}
                 eventHandlers={{
                   click: () =>
-                    setSelectedStop({
-                      lat,
-                      lng,
-                      route_id: stop.route_id
-                    }),
+                    setSelectedStop({ lat, lng, route_id: stop.route_id }),
                 }}
               >
                 <Popup>
@@ -195,30 +159,22 @@ const busIcon = new L.Icon({
                 </Popup>
               </Marker>
             );
-          });
-        })}
-
-        {busLocation && (
-            <Marker position={[busLocation.lat, busLocation.lng]} icon={busIcon}>
-                <Popup>🚌 Micro actual</Popup>
-            </Marker>
+          })
         )}
 
-        {mapCenter && (
-            <Marker position={mapCenter} icon={userIcon}>
-                <Popup>👤 Tu ubicación actual</Popup>
-            </Marker>
+        {busLocation && (
+          <Marker position={[busLocation.lat, busLocation.lng]} icon={busIcon}>
+            <Popup>🚌 Micro actual</Popup>
+          </Marker>
         )}
 
         {userLocation && (
-            <Marker position={userLocation} icon={userIcon}>
-                <Popup>📍 Tu ubicación</Popup>
-            </Marker>
+          <Marker position={userLocation} icon={userIcon}>
+            <Popup>📍 Tu ubicación</Popup>
+          </Marker>
         )}
-
       </MapContainer>
     </div>
   );
 };
-
 export default MapaPasajero;

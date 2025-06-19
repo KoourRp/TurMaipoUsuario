@@ -3,14 +3,15 @@ const { children } = Astro.props;
 import "../styles/global.css";
 ---
 
+<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TurMaipo</title>
   </head>
-  <body class="bg-[#282828] text-[#ebdbb2]">
-    <main class="min-h-screen p-4 rounded-2xl">
+  <body class="bg-gruvbox-dark-bg text-gruvbox-dark-fg min-h-screen h-screen w-screen m-0 p-0">
+    <main class="h-full w-full">
       {children}
     </main>
   </body>
