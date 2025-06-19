@@ -1,0 +1,22 @@
+---
+import MapaPasajero from '../../components/MapaPasajero';
+---
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mapa de Buses - TurMaipo</title>
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+qwGv4ISNdDZefU1WYdHZ1zz1xUr5bDYGm9Jmm3Ro="
+    crossorigin=""
+  />
+  </head>
+  <body class="bg-[#282828] text-[#ebdbb2] flex flex-col gap-4 p-4">
+    
+    
+      <MapaPasajero client:only="react" />
+    </main>
+  </body>
+</html>
