@@ -31,12 +31,45 @@ const MapaPasajero = () => {
   });
 
   useEffect(() => {
+  const allowed = true;
+  if (!allowed) {
+    window.location.href = '/';
+  }
+}, []);
+
+
+  useEffect(() => {
     const fetchBusStops = async () => {
       const { data } = await supabase.from('bus_stops').select('*');
       if (data) setBusStops(data);
     };
     fetchBusStops();
   }, []);
+
+  useEffect(() => {
+  let timeout: NodeJS.Timeout;
+
+  const resetTimer = () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      window.location.href = '/';
+    }, 2 * 60 * 1000); // 2 minutos
+  };
+
+  // Eventos que reinician el temporizador
+  const events = ['mousemove', 'keydown', 'click', 'scroll'];
+
+  events.forEach((event) => window.addEventListener(event, resetTimer));
+
+  // Inicia el temporizador al montar
+  resetTimer();
+
+  return () => {
+    clearTimeout(timeout);
+    events.forEach((event) => window.removeEventListener(event, resetTimer));
+  };
+}, []);
+
 
   useEffect(() => {
     if (!selectedStop) return;
