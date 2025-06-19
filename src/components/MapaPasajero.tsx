@@ -15,21 +15,21 @@ const MapaPasajero = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [mapCenter, setMapCenter] = useState<[number, number]>([-33.590175, -70.567891]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  
+
   const userIcon = new L.Icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   });
-  
+
   const busIcon = new L.Icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/61/61238.png',
+    iconUrl: 'https://tse2.mm.bing.net/th?id=OIP._AF9CtzE5XKPksuXxdPBBQHaHa&w=474&h=474&c=7',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   });
-  
+
   useEffect(() => {
     const fetchBusStops = async () => {
       const { data } = await supabase.from('bus_stops').select('*');
@@ -37,10 +37,10 @@ const MapaPasajero = () => {
     };
     fetchBusStops();
   }, []);
-  
+
   useEffect(() => {
     if (!selectedStop) return;
-    
+
     const fetchBusData = async () => {
       setLoading(true);
       setErrorMsg(null);
@@ -89,12 +89,13 @@ const MapaPasajero = () => {
       setLoading(false);
     };
 
-    const interval = setInterval(fetchBusData, 10000);
+    const interval = setInterval(fetchBusData, 5000);
     fetchBusData();
     return () => clearInterval(interval);
   }, [selectedStop]);
 
   useEffect(() => {
+    const fallbackCoords: [number, number] = [-33.590175, -70.567891];
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
@@ -102,7 +103,13 @@ const MapaPasajero = () => {
         setUserLocation([latitude, longitude]);
       },
       (err) => {
-        console.warn('❌ No se pudo obtener ubicación:', err);
+        setErrorMsg("No pudimos acceder a tu ubicación.\nUsando ubicación por defecto.");
+        setMapCenter(fallbackCoords);
+        setUserLocation(null);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
       }
     );
   }, []);
@@ -110,13 +117,16 @@ const MapaPasajero = () => {
   return (
     <div style={{ height: '100vh', width: '100vw' }}>
       {errorMsg && (
-        <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-md text-sm z-[1000]">
+        <div
+          className="fixed top-6 left-1/2 -translate-x-1/2 bg-yellow-500 text-white px-4 py-2 rounded-md shadow-lg z-[2000] transition-opacity duration-300"
+          style={{ color: 'white', animation: 'fadeOut 5s forwards' }}
+        >
           ⚠️ {errorMsg}
         </div>
       )}
       {loading && (
         <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-md text-sm z-[1000]">
-          🔄 Buscando ubicación...
+          Buscando ubicación...
         </div>
       )}
 
@@ -177,4 +187,5 @@ const MapaPasajero = () => {
     </div>
   );
 };
+
 export default MapaPasajero;
