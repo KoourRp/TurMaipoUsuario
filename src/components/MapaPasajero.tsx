@@ -16,6 +16,14 @@ const MapaPasajero = () => {
   const [mapCenter, setMapCenter] = useState<[number, number]>([-33.590175, -70.567891]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
+  const stopIcon = new L.Icon({
+    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/88/Map_marker.svg',
+    iconSize: [28, 28],
+    iconAnchor: [14, 28],
+    popupAnchor: [0, -28],
+  });
+
+
   const userIcon = new L.Icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
     iconSize: [32, 32],
@@ -29,6 +37,7 @@ const MapaPasajero = () => {
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   });
+  
 
   useEffect(() => {
   const allowed = true;
@@ -180,6 +189,7 @@ const MapaPasajero = () => {
               <Marker
                 key={`${stop.id}-${index}`}
                 position={[lat, lng]}
+                icon={stopIcon}
                 eventHandlers={{
                   click: () =>
                     setSelectedStop({ lat, lng, route_id: stop.route_id }),
