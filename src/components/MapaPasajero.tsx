@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { supabase } from '../lib/supabase';
 import { getDistance } from 'geolib';
+import L from 'leaflet';
 
 const MapaPasajero = () => {
   const [busStops, setBusStops] = useState<any[]>([]);
@@ -12,6 +13,23 @@ const MapaPasajero = () => {
   const [eta, setEta] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([-33.590175, -70.567891]);
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+
+
+  const userIcon = new L.Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+const busIcon = new L.Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/61/61231.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
 
   useEffect(() => {
     const checkConnection = async () => {
@@ -26,6 +44,7 @@ const MapaPasajero = () => {
     };
     checkConnection();
   }, []);
+  
 
   useEffect(() => {
     const fetchBusStops = async () => {
@@ -99,20 +118,40 @@ const MapaPasajero = () => {
     return () => clearInterval(interval);
   }, [selectedStop]);
 
+  useEffect(() => {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      setMapCenter([latitude, longitude]);  // para centrar el mapa
+      setUserLocation([latitude, longitude]);  // para el marcador
+      console.log('📍 Centrado en usuario:', latitude, longitude);
+    },
+    (err) => {
+      console.warn('❌ Error obteniendo ubicación del usuario:', err);
+    }
+  );
+}, []);
+
+
   return (
     <div className="w-full h-screen bg-[#181818] text-[#ebdbb2] relative">
+      <header className="bg-[#003366] text-white py-4 px-6 flex items-center justify-between shadow-md">
+        <h1 className="text-xl md:text-2xl font-semibold text-[#99ccff]">🚌 TurMaipo</h1>
+        <p className="text-sm md:text-base text-[#cddfff]">Seguimiento de buses en tiempo real</p>
+      </header>
+
       {errorMsg && (
-        <div className="absolute top-4 left-4 bg-red-600 text-white px-4 py-2 rounded shadow-md z-[1000]">
+        <div className="absolute top-20 left-4 bg-red-600 text-white px-4 py-2 rounded shadow-md z-[1000] text-sm md:text-base">
           ⚠️ {errorMsg}
         </div>
       )}
       {loading && (
-        <div className="absolute top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow-md z-[1000]">
+        <div className="absolute top-20 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow-md z-[1000] text-sm md:text-base">
           🔄 Buscando ubicación del bus...
         </div>
       )}
       <MapContainer
-        center={[-33.590175, -70.567891]}
+        center={mapCenter}
         zoom={13}
         style={{ height: '100vh', width: '100%' }}
       >
@@ -160,10 +199,23 @@ const MapaPasajero = () => {
         })}
 
         {busLocation && (
-          <Marker position={[busLocation.lat, busLocation.lng]}>
-            <Popup>🚌 Micro actual</Popup>
-          </Marker>
+            <Marker position={[busLocation.lat, busLocation.lng]} icon={busIcon}>
+                <Popup>🚌 Micro actual</Popup>
+            </Marker>
         )}
+
+        {mapCenter && (
+            <Marker position={mapCenter} icon={userIcon}>
+                <Popup>👤 Tu ubicación actual</Popup>
+            </Marker>
+        )}
+
+        {userLocation && (
+            <Marker position={userLocation} icon={userIcon}>
+                <Popup>📍 Tu ubicación</Popup>
+            </Marker>
+        )}
+
       </MapContainer>
     </div>
   );
