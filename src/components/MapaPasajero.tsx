@@ -17,7 +17,7 @@ const MapaPasajero = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
   const stopIcon = new L.Icon({
-    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/88/Map_marker.svg',
+    iconUrl: '/icons/bus-stop.png',
     iconSize: [28, 28],
     iconAnchor: [14, 28],
     popupAnchor: [0, -28],
