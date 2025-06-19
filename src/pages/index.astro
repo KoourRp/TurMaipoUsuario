@@ -1,19 +1,236 @@
 ---
-import '../styles/global.css';
+// Este archivo debe estar ubicado en src/pages/index.astro
+// Sin layout
 ---
-
+<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>TurMaipo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurMaipo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --gruvbox-dark-bg: #282828;
+        --gruvbox-dark-fg: #ebdbb2;
+        --gruvbox-dark-red: #FB4934AA;
+        --gruvbox-dark-blue: #458588;
+        --gruvbox-dark-dark-blue: #357578;
+        --gruvbox-dark-grey: #32302f;
+        --gruvbox-dark-light-grey: #3c3836AA;
+        --gruvbox-dark-app-bar: #32202fAA;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      body {
+        background-color: var(--gruvbox-dark-bg);
+        color: var(--gruvbox-dark-fg);
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .logo {
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, var(--gruvbox-dark-blue), var(--gruvbox-dark-red));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      }
+
+      .tagline {
+        font-size: clamp(1rem, 3vw, 1.2rem);
+        color: var(--gruvbox-dark-fg);
+        opacity: 0.8;
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .btn {
+        background-color: var(--gruvbox-dark-light-grey);
+        color: white;
+        padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+        border-radius: 12px;
+        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        position: relative;
+        overflow: hidden;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn:hover {
+        background-color: var(--gruvbox-dark-blue);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      }
+
+      .btn svg {
+        width: clamp(16px, 4vw, 20px);
+        height: clamp(16px, 4vw, 20px);
+      }
+
+      .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.1;
+        pointer-events: none;
+      }
+
+      .grid {
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(var(--gruvbox-dark-blue) 1px, transparent 1px),
+          linear-gradient(90deg, var(--gruvbox-dark-blue) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      .diagonal-lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          45deg,
+          var(--gruvbox-dark-red) 0,
+          var(--gruvbox-dark-red) 1px,
+          transparent 1px,
+          transparent 30px
+        );
+        opacity: 0.05;
+      }
+
+      .glow {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          var(--gruvbox-dark-blue) 0%,
+          rgba(69, 133, 136, 0) 70%
+        );
+        opacity: 0.1;
+        filter: blur(40px);
+      }
+
+      .glow-1 {
+        top: -200px;
+        right: -100px;
+      }
+
+      .glow-2 {
+        bottom: -200px;
+        left: -100px;
+        background: radial-gradient(
+          circle,
+          var(--gruvbox-dark-red) 0%,
+          rgba(251, 73, 52, 0) 70%
+        );
+      }
+
+      .card {
+        background-color: var(--gruvbox-dark-grey);
+        border-radius: 16px;
+        padding: clamp(1.5rem, 5vw, 2.5rem);
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--gruvbox-dark-blue), var(--gruvbox-dark-red));
+      }
+
+      @media (max-width: 480px) {
+        .card {
+          width: 90%;
+          padding: 1.25rem;
+        }
+      }
+    </style>
   </head>
-  <body class="bg-[#282828] text-[#ebdbb2] m-0 p-0 h-screen w-screen flex items-center justify-center">
-    <div class="flex flex-col gap-4 items-center">
-      <h1 class="text-2xl font-bold">TurMaipo</h1>
-      <a href="/dashboard/mapa" class="bg-[#3c3836] px-4 py-2 rounded-xl text-white hover:bg-[#504945]">
-        Buscar Bus Cercano
-      </a>
+  <body>
+    <div class="background">
+      <div class="grid"></div>
+      <div class="diagonal-lines"></div>
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <h1 class="logo">TurMaipo</h1>
+        <p class="tagline">Encuentra tu transporte de manera rápida y eficiente</p>
+
+        <a href="/dashboard/mapa" class="btn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Buscar Bus Cercano
+        </a>
+      </div>
     </div>
   </body>
 </html>

@@ -5,6 +5,16 @@
   z-index: 0;
 }
 
+:root {
+  --gruvbox-dark-bg: #1d2021;
+  --gruvbox-dark-fg: #ebdbb2;
+  --gruvbox-dark-blue: #458588;
+  --gruvbox-dark-red: #fb4934;
+  --gruvbox-dark-grey: #282828;
+  --gruvbox-dark-light-grey: #3c3836;
+}
+
+
 @keyframes fadeOut {
   0% {
     opacity: 1;
