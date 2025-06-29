@@ -1,47 +1,70 @@
-# Astro Starter Kit: Minimal
+# TurMaipoView
 
-```sh
-npm create astro@latest -- --template minimal
+Interfaz de usuario para visualizar la ubicación de las micros de la empresa **TurMaipo** y seleccionar paraderos cercanos. El proyecto está construido con [Astro](https://astro.build/) y [React](https://react.dev/), utiliza [Supabase](https://supabase.com/) para obtener la información de paraderos y rutas, y emplea [Leaflet](https://leafletjs.com/) para el mapa interactivo.
+
+## Requisitos
+
+- Node.js 18 o superior
+- npm 9 o superior (incluido con Node.js)
+
+## Instalación
+
+1. Clona este repositorio:
+   ```bash
+   git clone <repo-url>
+   cd TurMaipoUsuario
+   ```
+2. Instala las dependencias del proyecto:
+   ```bash
+   npm install
+   ```
+3. Crea un archivo `.env` en la raíz con tus credenciales de Supabase:
+   ```env
+   PUBLIC_SUPABASE_URL=<tu-url-de-supabase>
+   PUBLIC_SUPABASE_ANON_KEY=<tu-anon-key>
+   ```
+
+## Uso en desarrollo
+
+Inicia el servidor de desarrollo con:
+
+```bash
+npm run dev
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+El sitio estará disponible en `http://localhost:4321`. Al ingresar, podrás seleccionar un paradero y ver la micro más cercana en el mapa.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+| Comando           | Descripcion                                                
+| ----------------- | -----------------------------------------------------------
+| `npm run dev`     | Ejecuta el entorno de desarrollo
+| `npm run build`   | Genera la version optimizada en `dist/`
+| `npm run preview` | Sirve la carpeta `dist/` para comprobar el resultado final
+| `npm run astro`   | Acceso directo a la CLI de Astro
+## Despliegue
+El proyecto puede desplegarse fácilmente en Netlify u otros servicios que soporten sitios estáticos. El archivo `netlify.toml` ya contiene la configuración básica:
+```
+[build]
+  command = "npm run build"
+  publish = "dist"
+```
 
-## 🚀 Project Structure
+Cualquier servidor que sirva los archivos estáticos generados en `dist/` funcionará.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Estructura del proyecto
 
-```text
+```
 /
-├── public/
+├── public/          # Recursos estáticos (íconos, favicons)
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/  # Componentes React (MapaPasajero)
+│   ├── pages/       # Páginas Astro
+│   ├── lib/         # Cliente de Supabase
+│   └── styles/      # Hoja de estilos global
+├── astro.config.mjs # Configuración de Astro y Tailwind
+├── tailwind.config.cjs
+└── netlify.toml
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Licencia
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Este repositorio no incluye un archivo de licencia específico. Comprueba las políticas de tu organización antes de distribuir el código.
