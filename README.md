@@ -11,7 +11,7 @@ Interfaz de usuario para visualizar la ubicación de las micros de la empresa **
 
 1. Clona este repositorio:
    ```bash
-   git clone <repo-url>
+   git clone github.com/KoourRp/TurMaipoUsuario
    cd TurMaipoUsuario
    ```
 2. Instala las dependencias del proyecto:
