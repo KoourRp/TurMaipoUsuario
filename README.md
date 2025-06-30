@@ -66,5 +66,6 @@ Cualquier servidor que sirva los archivos estáticos generados en `dist/` funcio
 ```
 
 ## Licencia
+MIT © 2025 KoourRp
 
-Este repositorio no incluye un archivo de licencia específico. Comprueba las políticas de tu organización antes de distribuir el código.
+Compílalo, pruébalo en la pista y comparte tus pull-requests. ¡Buen viaje!
