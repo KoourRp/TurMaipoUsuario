@@ -66,6 +66,6 @@ Cualquier servidor que sirva los archivos estáticos generados en `dist/` funcio
 ```
 
 ## Licencia
-MIT © 2025 KoourRp
+MIT © 2025 Koour et al.
 
 Compílalo, pruébalo en la pista y comparte tus pull-requests. ¡Buen viaje!
