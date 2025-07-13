@@ -137,7 +137,7 @@ const MapaPasajero = () => {
   }, [selectedStop]);
 
   useEffect(() => {
-    const fallbackCoords: [number, number] = [-33.590175, -70.567891];
+    const fallbackCoords: [number, number] = [-33.644250, -70.352615]; // Cambiar la wea
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
