@@ -13,7 +13,7 @@ const MapaPasajero = () => {
   const [eta, setEta] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([-33.644232, -70.352591]);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([-33.432418, -70.619549]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
   const stopIcon = new L.Icon({
@@ -137,7 +137,7 @@ const MapaPasajero = () => {
   }, [selectedStop]);
 
   useEffect(() => {
-    const fallbackCoords: [number, number] = [-33.644232, -70.352591]; //ambiar la wea
+    const fallbackCoords: [number, number] = [-33.432418, -70.619549]; //ambiar la wea
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
