@@ -13,7 +13,7 @@ const MapaPasajero = () => {
   const [eta, setEta] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([-33.590175, -70.567891]);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([-33.644232, -70.352591]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
   const stopIcon = new L.Icon({
@@ -137,7 +137,7 @@ const MapaPasajero = () => {
   }, [selectedStop]);
 
   useEffect(() => {
-    const fallbackCoords: [number, number] = [-33.644250, -70.352615]; // Cambiar la wea
+    const fallbackCoords: [number, number] = [-33.644232, -70.352591]; //ambiar la wea
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
@@ -147,7 +147,7 @@ const MapaPasajero = () => {
       (err) => {
         setErrorMsg("No pudimos acceder a tu ubicación.\nUsando ubicación por defecto.");
         setMapCenter(fallbackCoords);
-        setUserLocation(null);
+        setUserLocation(fallbackCoords);
       },
       {
         enableHighAccuracy: true,
@@ -174,7 +174,7 @@ const MapaPasajero = () => {
 
       <MapContainer
         center={mapCenter}
-        zoom={13}
+        zoom={16}
         style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
